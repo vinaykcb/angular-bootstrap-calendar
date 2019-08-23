@@ -288,14 +288,27 @@ angular
         var dayEvents = flattenedEvents.filter(function(event) {
           return moment(event.startsAt).startOf('day').isSame(moment(day.date).startOf('day'));
         });
-        var newDayEvents = getDayView(
-          dayEvents,
-          day.date,
-          dayViewStart,
-          dayViewEnd,
-          dayViewSplit
-        ).events;
-        newEvents = newEvents.concat(newDayEvents);
+        var splitedEvents = {};
+        dayEvents.forEach(function(anEvent) {
+          if (!splitedEvents[anEvent.startsAt]) {
+            splitedEvents[anEvent.startsAt] = [];
+          }
+          splitedEvents[anEvent.startsAt].push(anEvent);
+        });
+        for (var key in splitedEvents) {
+          var newDayEvents = getDayView(
+            splitedEvents[key],
+            day.date,
+            dayViewStart,
+            dayViewEnd,
+            dayViewSplit,
+            150 / splitedEvents[key].length
+          ).events;
+          for (var i = 0; i < newDayEvents.length; i++) {
+            newDayEvents[i].count = newDayEvents.length;
+          }
+          newEvents = newEvents.concat(newDayEvents);
+        }
       });
       weekView.eventRows = [{
         row: newEvents.map(function(dayEvent) {
@@ -303,6 +316,8 @@ angular
           return {
             event: event,
             top: dayEvent.top,
+            left: dayEvent.left,
+            count: dayEvent.count,
             offset: calendarUtils.getWeekViewEventOffset({
               event: {
                 start: event.startsAt,

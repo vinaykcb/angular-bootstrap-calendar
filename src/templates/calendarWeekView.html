@@ -53,8 +53,8 @@
             ng-style="{
               top: vm.showTimes ? ((eventRow.top) + 'px') : 'auto',
               position: vm.showTimes ? 'absolute' : 'inherit',
-              width: vm.showTimes ? ((vm.dayColumnDimensions.width - 60) / vm.view.days.length + 'px') : '',
-              left: vm.showTimes ? (((vm.dayColumnDimensions.width - 60) / vm.view.days.length) * eventRow.offset) + 15 + 'px' : ''
+              width: vm.showTimes ? (((vm.dayColumnDimensions.width - 60) / vm.view.days.length)/eventRow.count + 'px') : '',
+              left: vm.showTimes ? (((vm.dayColumnDimensions.width - 60) / vm.view.days.length) * eventRow.offset) + eventRow.left + 15 + 'px' : ''
             }">
             <div
               class="day-highlight"
